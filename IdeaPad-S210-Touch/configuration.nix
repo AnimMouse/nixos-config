@@ -48,7 +48,7 @@
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
   # Show Plasma Wayland on SDDM (beta)
-  services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
+  # services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
 
   # Configure keymap in X11
   services.xserver.layout = "us";
@@ -91,10 +91,12 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+
+  # Enable GnuPG Agent with SSH Agent
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   # Enable ZRAM
   zramSwap = {
@@ -104,12 +106,6 @@
 
   # List services that you want to enable:
 
-  # Enable SSH Agent
-  programs.ssh.startAgent = true;
-
-  # Enable GnuPG Agent
-  programs.gnupg.agent.enable = true;
-
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
@@ -118,6 +114,9 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # Samba Firewall
+  networking.firewall.extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
