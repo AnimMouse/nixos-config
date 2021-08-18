@@ -10,14 +10,15 @@
       ./hardware-configuration.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Use the GRUB 2 boot loader.
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
 
-  networking.hostName = "Shawn-IdeaPad-S210"; # Define your hostname.
+  # Define on which hard drive you want to install Grub.
+  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
+
+  networking.hostName = "Albert-K40IJ"; # Define your hostname.
   networking.networkmanager.enable = true; # Manage WiFi.
-
-  # hardware.bluetooth.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
@@ -46,9 +47,7 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  # Show Plasma Wayland on SDDM (beta)
-  # services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-
+  
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -64,9 +63,9 @@
   services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.shawn = {
+  users.users.albert = {
     isNormalUser = true;
-    description = "Shawn";
+    description = "Albert";
     extraGroups = [ "wheel" "networkmanager" ];
   };
 
@@ -78,13 +77,11 @@
     firefox
     neofetch
     libreoffice
-    aria
     git
     notepadqq
-    qbittorrent
+    viewnior
     mpv-unwrapped
-    gnupg
-    superTuxKart
+    qbittorrent
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -113,13 +110,13 @@
     ];
   };
 
+  # List services that you want to enable:
+
   # Enable ZRAM
   zramSwap = {
     enable = true;
     algorithm = "zstd";
   };
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
@@ -129,9 +126,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  # Samba Firewall
-  networking.firewall.extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

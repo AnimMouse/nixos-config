@@ -14,10 +14,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "Shawn-IdeaPad-S210"; # Define your hostname.
-  networking.networkmanager.enable = true; # Manage WiFi.
-
-  # hardware.bluetooth.enable = true;
+  networking.hostName = "Shawn-VirtualBox"; # Define your hostname.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
@@ -26,8 +24,7 @@
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.enp3s0.useDHCP = true;
-  networking.interfaces.wlp2s0.useDHCP = true;
+  networking.interfaces.enp0s3.useDHCP = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -46,9 +43,7 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  # Show Plasma Wayland on SDDM (beta)
-  # services.xserver.displayManager.sddm.settings.Wayland.SessionDir = "${pkgs.plasma5Packages.plasma-workspace}/share/wayland-sessions";
-
+  
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -61,13 +56,13 @@
   hardware.pulseaudio.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.shawn = {
     isNormalUser = true;
     description = "Shawn";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
@@ -77,14 +72,9 @@
     wget
     firefox
     neofetch
-    libreoffice
-    aria
     git
     notepadqq
-    qbittorrent
-    mpv-unwrapped
-    gnupg
-    superTuxKart
+    viewnior
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -97,26 +87,13 @@
     enableSSHSupport = true;
   };
 
-  # Enable Intel Hybrid Driver
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-
-  # Enable Intel Hardware Acceleration
+  # Enable Hardware Acceleration
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
     ];
-  };
-
-  # Enable ZRAM
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
   };
 
   # List services that you want to enable:
@@ -129,9 +106,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  # Samba Firewall
-  networking.firewall.extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

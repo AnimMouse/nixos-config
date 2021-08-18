@@ -1,7 +1,9 @@
 # AnimMouse's NixOS Configuration
 My NixOS Configuration
 
-##### IdeaPad-S210-Touch `cp /etc/nixos/* ./IdeaPad-S210-Touch/`
+##### IdeaPad-S210-Touch
+`cp /etc/nixos/configuration.nix ./IdeaPad-S210-Touch/configuration.nix`\
+`sudo cp ./IdeaPad-S210-Touch/configuration.nix /etc/nixos/configuration.nix`
 
 #### NixOS Cheatsheet
 
