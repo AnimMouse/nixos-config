@@ -14,6 +14,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # NTFS support
+  boot.supportedFilesystems = [ "ntfs" ];
+
   networking.hostName = "Shawn-VirtualBox"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -25,10 +28,6 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
   networking.interfaces.enp0s3.useDHCP = true;
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -43,7 +42,7 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  
+
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -52,11 +51,12 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+  security.rtkit.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.shawn = {
@@ -75,6 +75,10 @@
     git
     notepadqq
     viewnior
+    mpv-unwrapped
+    tmate
+    magic-wormhole
+    onlyoffice-bin
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -82,12 +86,12 @@
   # programs.mtr.enable = true;
 
   # Enable GnuPG Agent with SSH Agent
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
-  # Enable Hardware Acceleration
+  # Enable OpenGL Hardware Acceleration
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
@@ -96,16 +100,24 @@
     ];
   };
 
+  # Enable ZRAM Swap
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+  };
+
   # List services that you want to enable:
+
+  # Enable BTRFS Auto Scrub
+  services.btrfs = {
+    autoScrub = {
+      enable = true;
+      fileSystems = [ "/" ];
+    };
+  };
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
