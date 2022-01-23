@@ -17,6 +17,9 @@
   # Define on which hard drive you want to install Grub.
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
+  # NTFS support
+  boot.supportedFilesystems = [ "ntfs" ];
+
   networking.hostName = "Albert-K40IJ"; # Define your hostname.
   networking.networkmanager.enable = true; # Manage WiFi.
 
@@ -29,10 +32,6 @@
   networking.useDHCP = false;
   networking.interfaces.enp3s0.useDHCP = true;
   networking.interfaces.wlp2s0.useDHCP = true;
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -47,7 +46,7 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
-  
+
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -56,8 +55,13 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+  security.rtkit.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
@@ -81,7 +85,12 @@
     notepadqq
     viewnior
     mpv-unwrapped
+    tmate
+    croc
     qbittorrent
+    signal-desktop
+    wineWowPackages.stable
+    onlyoffice-bin
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -118,14 +127,19 @@
     algorithm = "zstd";
   };
 
+  # Enable BTRFS Auto Scrub
+  services.btrfs = {
+    autoScrub = {
+      enable = true;
+      fileSystems = [ "/" ];
+    };
+  };
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # Enable Auto Upgrade NixOS
+  system.autoUpgrade.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
