@@ -21,7 +21,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking.hostName = "Albert-K40IJ"; # Define your hostname.
-  networking.networkmanager.enable = true; # Manage WiFi.
+  networking.networkmanager.enable = true; # Manage WiFi using NetworkManager.
 
   # Set your time zone.
   time.timeZone = "Asia/Manila";
@@ -70,7 +70,7 @@
   users.users.albert = {
     isNormalUser = true;
     description = "Albert";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
@@ -79,7 +79,6 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     firefox
-    neofetch
     libreoffice
     git
     notepadqq
@@ -93,15 +92,18 @@
     onlyoffice-bin
   ];
 
+  # Allow unfree programs
+  # nixpkgs.config.allowUnfree = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
 
   # Enable GnuPG Agent with SSH Agent
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
   # Enable Intel Hybrid Driver
   nixpkgs.config.packageOverrides = pkgs: {
@@ -139,7 +141,7 @@
   # services.openssh.enable = true;
 
   # Enable Auto Upgrade NixOS
-  system.autoUpgrade.enable = true;
+  # system.autoUpgrade.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -147,6 +149,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
+  system.stateVersion = "21.11"; # Did you read the comment?
 
 }
