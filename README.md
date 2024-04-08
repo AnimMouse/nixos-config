@@ -1,5 +1,5 @@
-# AnimMouse's NixOS Configuration
-My NixOS Configuration
+# Anim Mouse's NixOS Configuration
+My NixOS Configurations.
 
 #### NixOS Cheat sheet
 
